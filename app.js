@@ -2,15 +2,23 @@ const express = require('express');
 const app = express();
 const bodyParse= require('body-parser');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 const _ = require('lodash')
 app.set('view engine', 'ejs');
-
 
 
 app.use(bodyParse.urlencoded({extended:true}));
 app.use(express.static('public'));
 
-mongoose.connect('mongodb+srv://admin:ChethanDB@cluster0.tw0yrov.mongodb.net/todoListDB');
+//Access Config file
+dotenv.config({path:'./config.env'});
+
+//PORT
+const port = process.env.PORT;
+
+//Data base connection
+require('./DB/Connection');
+
 //Schema
 const itemSchema = new mongoose.Schema({
     name: String
@@ -136,10 +144,6 @@ app.get("/:customName", function(req,res){
     })
 });
 
-let port = process.env.PORT;
-if(port == null || port==""){
-    port =3000;
-}
 
 app.listen(port, function(){
     console.log("Server is running.....")
